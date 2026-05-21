@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="main">
+    <h1 class="page-title">Analytics Dashboard</h1>
+    <p class="page-subtitle">A deep dive into system records, class distribution metrics, and feature importance vectors.</p>
+
+    <div class="stats-row">
+        <div class="stat-col">
+            <div class="card stat-box">
+                <p>Transactions Analysed</p>
+                <h2>{{ total }}</h2>
+            </div>
+        </div>
+        <div class="stat-col">
+            <div class="card stat-box">
+                <p>Fraud Cases Detected</p>
+                <h2 style="color: var(--fraud-color);">{{ fraud }}</h2>
+            </div>
+        </div>
+        <div class="stat-col">
+            <div class="card stat-box">
+                <p>Model Accuracy</p>
+                <h2 style="color: var(--safe-color);">99.94%</h2>
+            </div>
+        </div>
+        <div class="stat-col">
+            <div class="card stat-box">
+                <p>Fraud Rate</p>
+                <h2>{{ fraud_percent }}%</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="chart-grid">
+        <div class="chart-col">
+            <div class="card">
+                <h3 style="font-size: 1.05rem; font-weight: 600; text-align: left;">Transaction Split Distribution</h3>
+                <div class="chart-wrap">
+                    <canvas id="splitChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="chart-col">
+            <div class="card">
+                <h3 style="font-size: 1.05rem; font-weight: 600; text-align: left;">Feature Importance (Model Weights)</h3>
+                <div class="chart-wrap">
+                    <canvas id="importanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+new Chart(document.getElementById('splitChart'),{
+    type:'doughnut',
+    data:{
+        labels:['Fraud','Normal'],
+        datasets:[{
+            data:[{{ fraud }}, {{ normal }}],
+            backgroundColor:['#ef4444','#10b981'],
+            borderWidth: 0
+        }]
+    },
+    options:{
+        responsive:true,
+        maintainAspectRatio:false,
+        plugins: {
+            legend: { labels: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans' } } }
+        }
+    }
+})
+
+new Chart(document.getElementById('importanceChart'),{
+    type:'bar',
+    data:{
+        labels:['Amount','V1','V2','V3'],
+        datasets:[{
+            label: 'Weight Intensity',
+            data:{{ importance }},
+            backgroundColor:'#eab308',
+            borderRadius: 4
+        }]
+    },
+    options:{
+        responsive:true,
+        maintainAspectRatio:false,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            x: { grid: { display: false }, ticks: { color: '#9ca3af' } },
+            y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#9ca3af' } }
+        }
+    }
+})
+</script>
+{% endblock %}

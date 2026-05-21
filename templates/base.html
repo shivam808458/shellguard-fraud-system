@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShellGuard - Fraud Guard System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v=9) }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        ShellGuard<span>.</span>
+    </div>
+
+    <div class="nav-links">
+        <a href="/">System</a>
+        {% if session.get('logged_in') %}
+            <a href="/dashboard">Dashboard</a>
+            <a href="/admin">Logs</a>
+            <a href="/logout" style="color: #ef4444;">Logout</a>
+        {% else %}
+            <a href="/login">Admin Access</a>
+        {% endif %}
+        <a href="#" class="btn-demo">Live Demo →</a>
+    </div>
+</nav>
+
+{% block content %}{% endblock %}
+
+</body>
+</html>

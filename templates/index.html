@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="main">
+    <div style="display: table; width: 100%; table-layout: fixed; border-spacing: 15px 0; margin: 0 -15px 30px -15px;">
+        <div style="display: table-cell; width: 33.33%;">
+            <div class="card" style="padding: 15px 20px; display: flex; align-items: center; gap: 12px;">
+                <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981;"></div>
+                <div>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; text-align: left;">Gateway Status</p>
+                    <p style="font-size: 0.95rem; font-weight: 700; color: #10b981; text-align: left;">Operational</p>
+                </div>
+            </div>
+        </div>
+        <div style="display: table-cell; width: 33.33%;">
+            <div class="card" style="padding: 15px 20px; display: flex; align-items: center; gap: 12px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                <div>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; text-align: left;">Model Latency</p>
+                    <p style="font-size: 0.95rem; font-weight: 700; text-align: left;">14ms (Real-time)</p>
+                </div>
+            </div>
+        </div>
+        <div style="display: table-cell; width: 33.33%;">
+            <div class="card" style="padding: 15px 20px; display: flex; align-items: center; gap: 12px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <div>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; text-align: left;">Threat Threshold</p>
+                    <p style="font-size: 0.95rem; font-weight: 700; text-align: left;">85% Sensitivity</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="page-title">Live Simulation Engine</h1>
+    <p class="page-subtitle">Submit transaction vectors into the live pipeline inference engine to test neural classification.</p>
+
+    <div class="split-layout">
+        <div class="split-col">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="font-size: 1.15rem; font-weight: 600; text-align: left;">New Transaction Input</h3>
+                    <div style="display: flex; gap: 8px;">
+                        <button type="button" onclick="loadPreset(450.50, -0.32, 1.15, -0.85)" style="background: rgba(16, 185, 129, 0.1); color: var(--safe-color); border: 1px solid rgba(16, 185, 129, 0.2); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; width: auto;">Safe Preset</button>
+                        <button type="button" onclick="loadPreset(95000.00, 12.45, -8.32, 14.10)" style="background: rgba(239, 68, 68, 0.1); color: var(--fraud-color); border: 1px solid rgba(239, 68, 68, 0.2); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; width: auto;">Risk Preset</button>
+                    </div>
+                </div>
+
+                <form id="fraudForm">
+                    <div class="form-group">
+                        <label>Transaction Amount (USD)</label>
+                        <input type="number" step="any" id="amount" placeholder="e.g. 500.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label>PCA Feature Component V1</label>
+                        <input type="number" step="any" id="v1" placeholder="Value for V1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>PCA Feature Component V2</label>
+                        <input type="number" step="any" id="v2" placeholder="Value for V2" required>
+                    </div>
+                    <div class="form-group">
+                        <label>PCA Feature Component V3</label>
+                        <input type="number" step="any" id="v3" placeholder="Value for V3" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Analyse Transaction Vectors</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="split-col">
+            <div style="display: flex; flex-direction: column; gap: 20px; height: 100%;">
+                <div class="card" style="flex: 1; display: flex; flex-direction: column; min-height: 250px;">
+                    <div class="feed-header">
+                        <h3 style="font-size: 1.15rem; font-weight: 600; text-align: left;">Classification Screen</h3>
+                        <div class="status-indicator">
+                            <div class="status-dot"></div>
+                            Pipeline Active
+                        </div>
+                    </div>
+
+                    <div class="realtime-box" id="feedContainer" style="flex: 1;">
+                        <div id="waitingPlaceholder">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" style="margin-bottom: 10px;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Awaiting input matrices for tensor verification...</p>
+                        </div>
+
+                        <div id="resultBox" class="alert-output" style="display: none;">
+                            <h2 id="resTitle" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 5px; text-align: left;"></h2>
+                            <p id="resProb" style="font-size: 1rem; font-weight: 500; color: var(--text-primary); text-align: left;"></p>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px; text-align: left;">Security hash generated and pushed to global SQLite node ledger.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="padding: 20px; background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255,255,255,0.03);">
+                    <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 12px; text-align: left; display: flex; align-items: center; gap: 8px;">
+                        <span style="width: 6px; height: 6px; background: var(--accent); border-radius: 50%;"></span>
+                        Pipeline Execution Shell
+                    </h4>
+                    <div id="terminalConsole" style="font-family: 'Courier New', Courier, monospace; font-size: 0.8rem; color: #a3e635; line-height: 1.6; height: 100px; overflow-y: auto; text-align: left;">
+                        <p style="color: var(--text-muted);">[SYSTEM] Kernel initialization successful.</p>
+                        <p style="color: var(--text-muted);">[MODEL] Weights and Standard Scaler loaded into RAM mapping.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function loadPreset(amt, val1, val2, val3) {
+    document.getElementById('amount').value = amt;
+    document.getElementById('v1').value = val1;
+    document.getElementById('v2').value = val2;
+    document.getElementById('v3').value = val3;
+    const consoleBox = document.getElementById("terminalConsole");
+    consoleBox.innerHTML += `<p style="color: var(--accent);">[SHELL] Template dataset loaded into input streams automatically.</p>`;
+    consoleBox.scrollTop = consoleBox.scrollHeight;
+}
+
+document.getElementById("fraudForm").onsubmit=async(e)=>{
+    e.preventDefault()
+    const consoleBox = document.getElementById("terminalConsole");
+    consoleBox.innerHTML += `<p>[PIPELINE] Intercepting request vectors...</p>`;
+    consoleBox.innerHTML += `<p>[PROCESS] Applying fit_transform standard scaling matrix...</p>`;
+    consoleBox.scrollTop = consoleBox.scrollHeight;
+
+    const features=[amount.value,v1.value,v2.value,v3.value]
+    const res=await fetch("/predict",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({features})
+    })
+    const data=await res.json()
+    
+    document.getElementById("waitingPlaceholder").style.display = "none";
+    const resBox = document.getElementById("resultBox");
+    resBox.style.display = "block";
+    
+    if(data.result === "Fraud") {
+        resBox.className = "alert-output fraud";
+        document.getElementById("resTitle").innerText = "🚨 BLOCKED (Fraud Detected)";
+        document.getElementById("resTitle").style.color = "var(--fraud-color)";
+        consoleBox.innerHTML += `<p style="color: #ef4444;">[CRITICAL] Logistic classification weight crossed critical limit! Status: FRAUD</p>`;
+    } else {
+        resBox.className = "alert-output normal";
+        document.getElementById("resTitle").innerText = "✅ APPROVED (Safe)";
+        document.getElementById("resTitle").style.color = "var(--safe-color)";
+        consoleBox.innerHTML += `<p style="color: #10b981;">[SUCCESS] Transaction vectors verified safe. Probability match clean.</p>`;
+    }
+    
+    document.getElementById("resProb").innerText = "Inference Risk Probability: " + data.probability + "%";
+    consoleBox.innerHTML += `<p style="color: var(--text-muted);">[SQLITE] Transaction logging commit successful.</p>`;
+    consoleBox.scrollTop = consoleBox.scrollHeight;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="main">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <h1 class="page-title">Transaction Logs</h1>
+        <form action="{{ url_for('delete_all') }}" method="POST">
+            <button type="submit" class="btn-danger" style="padding: 10px 16px;" onclick="return confirm('Purge entire transaction log cache?')">
+                Clear All Database Records
+            </button>
+        </form>
+    </div>
+    <p class="page-subtitle">Complete historical overview of computed pipeline inputs and classification datastores.</p>
+
+    <div class="card" style="padding: 10px 20px;">
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Amount (USD)</th>
+                        <th>Classification</th>
+                        <th>Timestamp</th>
+                        <th style="text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                    <tr>
+                        <td style="font-weight: 600; color: var(--text-muted); text-align: left;">#{{row['id']}}</td>
+                        <td style="font-weight: 500; text-align: left;">${{row['amount']}}</td>
+                        <td style="text-align: left;">
+                            {% if row['result'] == 'Fraud' %}
+                                <span class="badge badge-fraud">BLOCKED</span>
+                            {% else %}
+                                <span class="badge badge-normal">APPROVED</span>
+                            {% endif %}
+                        </td>
+                        <td style="color: var(--text-muted); font-size: 0.9rem; text-align: left;">{{row['time']}}</td>
+                        <td style="text-align: right;">
+                            <form action="{{ url_for('delete_log', id=row['id']) }}" method="POST" style="display: inline;">
+                                <button type="submit" class="btn-danger" style="font-size: 0.8rem;" onclick="return confirm('Delete single logged trace?')">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
