@@ -72,7 +72,7 @@ def predict():
     conn.execute("""
     INSERT INTO transactions(amount,v1,v2,v3,result,time)
     VALUES(?,?,?,?,?,?)
-    """,(data[0],data[1],data[2],data[3],result,
+    """,(float(data[0]),float(data[1]),float(data[2]),float(data[3]),result,
         datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
     conn.commit()
     conn.close()

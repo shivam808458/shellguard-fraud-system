@@ -37,68 +37,106 @@
 
     <div class="split-layout">
         <div class="split-col">
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="font-size: 1.15rem; font-weight: 600; text-align: left;">New Transaction Input</h3>
-                    <div style="display: flex; gap: 8px;">
-                        <button type="button" onclick="loadPreset(450.50, -0.32, 1.15, -0.85)" style="background: rgba(16, 185, 129, 0.1); color: var(--safe-color); border: 1px solid rgba(16, 185, 129, 0.2); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; width: auto;">Safe Preset</button>
-                        <button type="button" onclick="loadPreset(95000.00, 12.45, -8.32, 14.10)" style="background: rgba(239, 68, 68, 0.1); color: var(--fraud-color); border: 1px solid rgba(239, 68, 68, 0.2); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; width: auto;">Risk Preset</button>
+            <div class="card" style="padding: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="font-size: 1.05rem; font-weight: 600; text-align: left;">New Transaction Input</h3>
+                    <div style="display: flex; gap: 6px;">
+                        <button type="button" onclick="loadPreset(450.50, -0.32, 1.15, -0.85)" style="background: rgba(16, 185, 129, 0.1); color: var(--safe-color); border: 1px solid rgba(16, 185, 129, 0.2); padding: 3px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 600; cursor: pointer; width: auto;">Safe Preset</button>
+                        <button type="button" onclick="loadPreset(95000.00, 12.45, -8.32, 14.10)" style="background: rgba(239, 68, 68, 0.1); color: var(--fraud-color); border: 1px solid rgba(239, 68, 68, 0.2); padding: 3px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 600; cursor: pointer; width: auto;">Risk Preset</button>
                     </div>
                 </div>
 
                 <form id="fraudForm">
-                    <div class="form-group">
-                        <label>Transaction Amount (USD)</label>
-                        <input type="number" step="any" id="amount" placeholder="e.g. 500.00" required>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label style="font-size: 0.75rem; margin-bottom: 5px;">TRANSACTION AMOUNT (USD)</label>
+                        <input type="number" step="any" id="amount" placeholder="$ e.g. 149.99" required style="padding: 10px 12px; font-size: 0.85rem;">
                     </div>
-                    <div class="form-group">
-                        <label>PCA Feature Component V1</label>
-                        <input type="number" step="any" id="v1" placeholder="Value for V1" required>
+                    
+                    <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                            <label style="font-size: 0.75rem; margin-bottom: 5px;">MERCHANT</label>
+                            <select id="v1" required style="width: 100%; padding: 10px 12px; background: rgba(4, 7, 17, 0.9); border: 1px solid rgba(255, 255, 255, 0.05); color: white; border-radius: 8px; font-size: 0.85rem; height: auto;">
+                                <option value="-0.32">Amazon (E-Commerce)</option>
+                                <option value="0.55">Flipkart (Retail Orders)</option>
+                                <option value="-1.20">eBay (Global Marketplace)</option>
+                                <option value="1.12">Apple Store (Digital Goods)</option>
+                                <option value="-0.85">Netflix Subscription (Recurring)</option>
+                                <option value="0.22">Uber Rides (Local Transport)</option>
+                                <option value="-2.45">Steam Games (Online Store)</option>
+                                <option value="5.10">Unknown Overseas Vendor (High Risk)</option>
+                                <option value="8.65">Unverified Shell Merchant (Suspicious)</option>
+                                <option value="12.45">Proxy Payment Gateway (Critical Risk)</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                            <label style="font-size: 0.75rem; margin-bottom: 5px;">CARD TYPE</label>
+                            <select id="v2" required style="width: 100%; padding: 10px 12px; background: rgba(4, 7, 17, 0.9); border: 1px solid rgba(255, 255, 255, 0.05); color: white; border-radius: 8px; font-size: 0.85rem; height: auto;">
+                                <option value="1.15">Visa Credit (Platinum)</option>
+                                <option value="0.45">Mastercard Debit (Secure)</option>
+                                <option value="0.95">Rupay Platinum (Domestic)</option>
+                                <option value="-1.10">Amex Gold (Premium)</option>
+                                <option value="1.85">Visa Signature (Verified Elements)</option>
+                                <option value="-0.35">Mastercard Business Card</option>
+                                <option value="-2.80">Diners Club International</option>
+                                <option value="-5.12">Anonymous Virtual Card (Unverified)</option>
+                                <option value="-8.32">International Prepaid Card (High Risk)</option>
+                                <option value="-11.50">Crypto Linked Debit Card (Critical Risk)</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>PCA Feature Component V2</label>
-                        <input type="number" step="any" id="v2" placeholder="Value for V2" required>
+
+                    <div class="form-group" style="margin-bottom: 18px;">
+                        <label style="font-size: 0.75rem; margin-bottom: 5px;">TRANSACTION SCENARIO</label>
+                        <select id="v3" required style="width: 100%; padding: 10px 12px; background: rgba(4, 7, 17, 0.9); border: 1px solid rgba(255, 255, 255, 0.05); color: white; border-radius: 8px; font-size: 0.85rem; height: auto;">
+                            <option value="-0.85">Standard Coffee Shop (POS Terminal)</option>
+                            <option value="-0.22">Supermarket Groceries (Physical Store)</option>
+                            <option value="1.40">Utility Bill Payment (Auto-Pay)</option>
+                            <option value="2.30">ATM Cash Withdrawal (Home Branch)</option>
+                            <option value="-1.50">Online Electronics Purchase (Secured Checkout)</option>
+                            <option value="-3.10">New Device Login & High-Value Order</option>
+                            <option value="-6.40">Rapid Consecutive Low-Value Transactions</option>
+                            <option value="-9.80">Midnight International Transfer (Unusual Time)</option>
+                            <option value="14.10">Cross-Border High-Value Server Purchase</option>
+                            <option value="18.55">Bulk Gift Card Buying Spree (Extreme Risk)</option>
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label>PCA Feature Component V3</label>
-                        <input type="number" step="any" id="v3" placeholder="Value for V3" required>
-                    </div>
-                    <button type="submit" class="btn-submit">Analyse Transaction Vectors</button>
+                    
+                    <button type="submit" class="btn-submit" style="padding: 12px; font-size: 0.95rem;">Analyse Transaction Vectors</button>
                 </form>
             </div>
         </div>
 
         <div class="split-col">
             <div style="display: flex; flex-direction: column; gap: 20px; height: 100%;">
-                <div class="card" style="flex: 1; display: flex; flex-direction: column; min-height: 250px;">
-                    <div class="feed-header">
+                <div class="card" style="flex: 1; display: flex; flex-direction: column; min-height: 240px; padding: 24px;">
+                    <div class="feed-header" style="margin-bottom: 20px;">
                         <h3 style="font-size: 1.15rem; font-weight: 600; text-align: left;">Classification Screen</h3>
-                        <div class="status-indicator">
+                        <div class="status-indicator" style="padding: 5px 12px; font-size: 0.8rem;">
                             <div class="status-dot"></div>
                             Pipeline Active
                         </div>
                     </div>
 
-                    <div class="realtime-box" id="feedContainer" style="flex: 1;">
+                    <div class="realtime-box" id="feedContainer" style="flex: 1; min-height: 140px; padding: 20px;">
                         <div id="waitingPlaceholder">
-                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" style="margin-bottom: 10px;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" style="margin-bottom: 10px;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
                             <p style="color: var(--text-muted); font-size: 0.9rem;">Awaiting input matrices for tensor verification...</p>
                         </div>
 
-                        <div id="resultBox" class="alert-output" style="display: none;">
-                            <h2 id="resTitle" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 5px; text-align: left;"></h2>
-                            <p id="resProb" style="font-size: 1rem; font-weight: 500; color: var(--text-primary); text-align: left;"></p>
-                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px; text-align: left;">Security hash generated and pushed to global SQLite node ledger.</p>
+                        <div id="resultBox" class="alert-output" style="display: none; padding: 16px;">
+                            <h2 id="resTitle" style="font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; text-align: left;"></h2>
+                            <p id="resProb" style="font-size: 0.95rem; font-weight: 500; color: var(--text-primary); text-align: left;"></p>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; text-align: left;">Security hash generated and pushed to global SQLite node ledger.</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="card" style="padding: 20px; background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255,255,255,0.03);">
+                <div class="card" style="padding: 20px 24px; background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255,255,255,0.03);">
                     <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 12px; text-align: left; display: flex; align-items: center; gap: 8px;">
                         <span style="width: 6px; height: 6px; background: var(--accent); border-radius: 50%;"></span>
                         Pipeline Execution Shell
                     </h4>
-                    <div id="terminalConsole" style="font-family: 'Courier New', Courier, monospace; font-size: 0.8rem; color: #a3e635; line-height: 1.6; height: 100px; overflow-y: auto; text-align: left;">
+                    <div id="terminalConsole" style="font-family: 'Courier New', Courier, monospace; font-size: 0.8rem; color: #a3e635; line-height: 1.6; height: 95px; overflow-y: auto; text-align: left;">
                         <p style="color: var(--text-muted);">[SYSTEM] Kernel initialization successful.</p>
                         <p style="color: var(--text-muted);">[MODEL] Weights and Standard Scaler loaded into RAM mapping.</p>
                     </div>

@@ -76,7 +76,7 @@ new Chart(document.getElementById('splitChart'),{
 new Chart(document.getElementById('importanceChart'),{
     type:'bar',
     data:{
-        labels:['Amount','V1','V2','V3'],
+        labels:['Amount','Merchant Risk Score','Card Type Trust Score','Risk Scenario Score'],
         datasets:[{
             label: 'Weight Intensity',
             data:{{ importance }},
